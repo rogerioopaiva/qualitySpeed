@@ -1,6 +1,5 @@
 package com.rogerioopaiva.qualitySpeed.service;
 
-import com.rogerioopaiva.qualitySpeed.exception.ErroAutenticacao;
 import com.rogerioopaiva.qualitySpeed.exception.RegraNegocioException;
 import com.rogerioopaiva.qualitySpeed.model.entity.Usuario;
 import com.rogerioopaiva.qualitySpeed.model.repository.UsuarioRepository;
@@ -85,7 +84,7 @@ public class UsuarioServiceTest {
 
         Throwable exception = Assertions.catchThrowable( () -> service.autenticar("email@email.com", "senha"));
         Assertions.assertThat(exception)
-                .isInstanceOf(ErroAutenticacao.class)
+                .isInstanceOf(RegraNegocioException.class)
                 .hasMessage("Usuário não encontrado para o email informado.");
     }
 
@@ -96,7 +95,7 @@ public class UsuarioServiceTest {
         Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(usuario));
 
         Throwable exception = Assertions.catchThrowable( () -> service.autenticar("email@email.com", "123") );
-        Assertions.assertThat(exception).isInstanceOf(ErroAutenticacao.class).hasMessage("Senha inválida.");
+        Assertions.assertThat(exception).isInstanceOf(RegraNegocioException.class).hasMessage("Senha inválida.");
     }
 
     @Test(expected = Test.None.class)

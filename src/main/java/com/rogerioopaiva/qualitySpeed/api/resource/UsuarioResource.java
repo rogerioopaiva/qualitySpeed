@@ -1,7 +1,6 @@
 package com.rogerioopaiva.qualitySpeed.api.resource;
 
 import com.rogerioopaiva.qualitySpeed.api.dto.UsuarioDTO;
-import com.rogerioopaiva.qualitySpeed.exception.ErroAutenticacao;
 import com.rogerioopaiva.qualitySpeed.exception.RegraNegocioException;
 import com.rogerioopaiva.qualitySpeed.model.entity.Usuario;
 import com.rogerioopaiva.qualitySpeed.service.UsuarioService;
@@ -27,7 +26,7 @@ public class UsuarioResource {
             try {
                 Usuario usuarioAutenticado = service.autenticar(dto.getEmail(), dto.getSenha());
                 return ResponseEntity.ok(usuarioAutenticado);
-            }catch (ErroAutenticacao e) {
+            }catch (RegraNegocioException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
         }

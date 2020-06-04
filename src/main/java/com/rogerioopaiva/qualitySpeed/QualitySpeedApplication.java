@@ -13,7 +13,6 @@ public class QualitySpeedApplication implements WebMvcConfigurer {
 	
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(QualitySpeedApplication.class, args);
 	}
 

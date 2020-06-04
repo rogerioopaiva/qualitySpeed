@@ -1,59 +1,53 @@
 package com.rogerioopaiva.qualitySpeed.service.impl;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.rogerioopaiva.qualitySpeed.exception.ErroAutenticacao;
+import com.rogerioopaiva.qualitySpeed.exception.RegraNegocioException;
 import com.rogerioopaiva.qualitySpeed.model.entity.Usuario;
 import com.rogerioopaiva.qualitySpeed.model.repository.UsuarioRepository;
 import com.rogerioopaiva.qualitySpeed.service.UsuarioService;
-import com.rogerioopaiva.qualitySpeed.exception.ErroAutenticacao;
-import com.rogerioopaiva.qualitySpeed.exception.RegraNegocioException;		
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
-	
-	private UsuarioRepository repository;
 
-	public UsuarioServiceImpl(UsuarioRepository repository) {
-		super();
-		this.repository = repository;
-	}
+    private UsuarioRepository repository;
 
-	@Override
-	public Usuario autenticar(String email, String senha) {
-		Optional<Usuario> usuario = repository.findByEmail(email);
-		
-		if(!usuario.isPresent()) {
-			throw new ErroAutenticacao("Usuário não encontrado para o email informado.");
-		}
-		
-		if(!usuario.get().getSenha().equals(senha)) {
-			throw new ErroAutenticacao("Senha inválida.");
-		}
-		
-		return usuario.get();
-	}
+    @Autowired
+    public UsuarioServiceImpl(UsuarioRepository repository) {
+        this.repository = repository;
+    }
 
-	@Override
-	@Transactional
-	public Usuario salvarUsuario(Usuario usuario) {
-		validarEmail(usuario.getEmail());
-		return repository.save(usuario);
-	}
+    @Override
+    public Usuario autenticar(String email, String senha) {
+        Optional<Usuario> usuario = repository.findByEmail(email);
 
-	@Override
-	public void validarEmail(String email) {
-		boolean existe = repository.existsByEmail(email);
-		if(existe) {
-			throw new RegraNegocioException("Já existe um usuário cadastrado com este email.");
-		}
-	}
+        if(!usuario.isPresent()) {
+            throw new ErroAutenticacao("Usuário não encontrado para o email informado.");
+        }
 
-	@Override
-	public Optional<Usuario> obterPorId(Long id) {
-		return repository.findById(id);
-	}
-	
+        if(!usuario.get().getSenha().equals(senha)) {
+            throw new ErroAutenticacao("Senha inválida.");
+        }
+
+        return usuario.get();
+    }
+
+    @Override
+    @Transactional
+    public Usuario salvarUsuario(Usuario usuario) {
+        validarEmail(usuario.getEmail());
+        return repository.save(usuario);
+    }
+
+    @Override
+    public void validarEmail(String email) {
+    boolean existe = repository.existsByEmail(email);
+    if(existe) {
+        throw new RegraNegocioException("Já existe um usuário cadastrado com este email.");
+        }
+    }
 }
